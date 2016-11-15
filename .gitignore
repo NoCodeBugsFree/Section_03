@@ -13,3 +13,4 @@ Escape/Content/StarterContent/
 ######################
 *.VC.db
 
+/Escape/Escape.VC.VC.opendb
