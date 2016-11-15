@@ -21,13 +21,10 @@ void UPossitionReport::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!GetOwner())
-	{
-		return;
-	}
-
 	FString OwnerName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Possition Report reporting on %s !"), *OwnerName);
+	// FString ObjectPosition = GetOwner()->GetActorLocation().ToString();
+	FString ObjectPosition = GetOwner()->GetActorTransform().GetLocation().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("%s is on %s !"), *OwnerName, *ObjectPosition);
 	
 }
 
