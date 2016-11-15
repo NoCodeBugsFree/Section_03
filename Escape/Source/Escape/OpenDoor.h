@@ -34,7 +34,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	ATriggerVolume* PressurePlate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 	AActor* ActorThatOpens;
 	
 };
