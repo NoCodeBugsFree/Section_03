@@ -11,8 +11,8 @@ UPossitionReport::UPossitionReport()
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	
+	
 }
 
 
@@ -21,7 +21,13 @@ void UPossitionReport::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	if (!GetOwner())
+	{
+		return;
+	}
+
+	FString OwnerName = GetOwner()->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Possition Report reporting on %s !"), *OwnerName);
 	
 }
 
