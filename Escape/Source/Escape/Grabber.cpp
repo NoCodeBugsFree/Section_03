@@ -53,8 +53,21 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	// Draw a red trace in the world to visualize
 	DrawDebugLine(GetWorld(), PlayerViewPointLocation, LineTraceEnd, FColor::Red, false, DeltaTime, 0, 20.f);
 
-	// Raycast out to reach distance
+	// Line Trace (AKA ray-cast) out to reach distance
+	FCollisionQueryParams CQP(FName(TEXT("")), false, GetOwner());
 
-	// See what we hit
+	// FCollisionObjectQueryParams COQP;
+	// COQP.AddObjectTypesToQuery(ECC_PhysicsBody);
+	
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByObjectType(OUT Hit, PlayerViewPointLocation, LineTraceEnd, 
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), CQP);
+
+	// see what we hit
+	if (Hit.GetActor())
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s"), *Hit.GetActor()->GetName());
+	}
+
 }
 

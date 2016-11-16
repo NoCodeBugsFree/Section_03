@@ -12,5 +12,6 @@ Escape/Content/StarterContent/
 # VS Generated Files #
 ######################
 *.VC.db
+*.suo
 
 /Escape/Escape.VC.VC.opendb
