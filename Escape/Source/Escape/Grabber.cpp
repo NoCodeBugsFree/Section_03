@@ -16,51 +16,84 @@ UGrabber::UGrabber()
 	// ...
 }
 
-
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// Look for attached Physics Handle
-	// Searches components array and returns first encountered component of the specified class
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle)
-	{
-		
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Physics Handle Component NOT FOUND !!!"));
-	}
+	FindPhysicsHandleComponent();
 	
-	// try to find InputComponent
-	// Implement an Actor component for input bindings
-	// An Input Component is a transient component that is to an Actor to bind various forms 
-	// of input events to delegate functions. Input components are processed from 
-	// a stack managed by the PlayerController and processed by the PlayerInput. 
-	// Each binding can consume the input event preventing other components 
-	// on the input stack from processing the input.
-	
-	InputComp = GetOwner()->FindComponentByClass<UInputComponent>();
-	if (InputComp)
-	{
-		UE_LOG(LogTemp, Error, TEXT("InputComp was found ..."));
-		// Bind the input axis
-		InputComp->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
-	} 
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("InputComp NOT FOUND !"));
-	}
+	// try to find InputComponent ans setup InputComponent
+	SetupInputComponent();
 }
-
 
 // Called every frame
 void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	// if the physics handle is attached
+		// move the object that we're holding
+
+}
+
+void UGrabber::FindPhysicsHandleComponent()
+{
+	// Searches components array and returns first encountered component of the specified class
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle)
+	{
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Physics Handle Component NOT FOUND !!!"));
+	}
+}
+
+void UGrabber::SetupInputComponent()
+{
+	// Implement an Actor component for input bindings
+	// An Input Component is a transient component that is to an Actor to bind various forms 
+	// of input events to delegate functions. Input components are processed from 
+	// a stack managed by the PlayerController and processed by the PlayerInput. 
+	// Each binding can consume the input event preventing other components 
+	// on the input stack from processing the input.
+
+	InputComp = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("InputComp was found ..."));
+		// Bind the input axis
+		InputComp->BindAction("Grab", IE_Pressed, this, &UGrabber::GrabPressed);
+		InputComp->BindAction("Grab", IE_Released, this, &UGrabber::GrabReleased);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("InputComp NOT FOUND !"));
+	}
+}
+
+void UGrabber::GrabPressed()
+{
+	UE_LOG(LogTemp, Error, TEXT("GrabPressed()"));
+
+	// LINE TRACE and see if we reach any actors with physics body collision channel set
+	GetFirstPhysicsBodyInReach();
+
+	// if we hit something then attach a physics handle
+	// TODO attach Physics Handle
+}
+
+void UGrabber::GrabReleased()
+{
+	UE_LOG(LogTemp, Error, TEXT("GrabReleased()"));
+	// Release Physics Handle
+}
+
+const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
+{
 	// Get the player viewpoint
 
 	// AController::GetPlayerViewPoint
@@ -70,26 +103,13 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewPointLocation, OUT PlayerViewPointRotation);
 
-	// log out to test
-	/*
-	UE_LOG(LogTemp, Error, TEXT("Location = %s  Rotation = %s"), 
-		*PlayerViewPointLocation.ToString(), 
-		*PlayerViewPointRotation.ToString());
-	*/
-
 	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
-
-	// Draw a red trace in the world to visualize
-	DrawDebugLine(GetWorld(), PlayerViewPointLocation, LineTraceEnd, FColor::Red, false, DeltaTime, 0, 20.f);
 
 	// Line Trace (AKA ray-cast) out to reach distance
 	FCollisionQueryParams CQP(FName(TEXT("")), false, GetOwner());
 
-	// FCollisionObjectQueryParams COQP;
-	// COQP.AddObjectTypesToQuery(ECC_PhysicsBody);
-	
 	FHitResult Hit;
-	GetWorld()->LineTraceSingleByObjectType(OUT Hit, PlayerViewPointLocation, LineTraceEnd, 
+	GetWorld()->LineTraceSingleByObjectType(OUT Hit, PlayerViewPointLocation, LineTraceEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), CQP);
 
 	// see what we hit
@@ -98,10 +118,6 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 		UE_LOG(LogTemp, Error, TEXT("%s"), *Hit.GetActor()->GetName());
 	}
 
-}
-
-void UGrabber::Grab()
-{
-	UE_LOG(LogTemp, Error, TEXT("Grab()"));
+	return Hit;
 }
 

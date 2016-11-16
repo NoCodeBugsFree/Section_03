@@ -23,9 +23,6 @@ public:
 
 private:
 
-	/** Raycast and grab that's in reach  */
-	void Grab();
-
 	/** Reach in cm  */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float Reach = 100.f;
@@ -33,5 +30,18 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle;
 
 	UInputComponent* InputComp;
+
+	/**  find (assumed) attached  PhysicsHandleComponent */
+	void FindPhysicsHandleComponent();
+
+	/**  setup (assumed attached InputComponent */
+	void SetupInputComponent();
+
+	/** Raycast and grab that's in reach  */
+	void GrabPressed();
+	void GrabReleased();
+
+	/** Return Hit for first physics body in reach  */
+	const FHitResult GetFirstPhysicsBodyInReach();
 	
 };
