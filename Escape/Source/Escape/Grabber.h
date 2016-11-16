@@ -26,5 +26,7 @@ private:
 	/** Reach in cm  */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float Reach = 100.f;
+
+	UPhysicsHandleComponent* PhysicsHandle;
 	
 };
