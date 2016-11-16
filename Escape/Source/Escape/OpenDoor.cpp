@@ -15,21 +15,6 @@ UOpenDoor::UOpenDoor()
 	// ...
 }
 
-void UOpenDoor::OpenDoor()
-{
-	// Find Owning Actor
-	AActor* Onwer = GetOwner();
-
-	// Create a Rotator
-	FRotator NewRotation = FRotator::ZeroRotator;
-
-	// Set the door rotation
-	if (Onwer)
-	{
-		Onwer->SetActorRotation(NewRotation);
-	}
-}
-
 // Called when the game starts
 void UOpenDoor::BeginPlay()
 {
@@ -37,6 +22,30 @@ void UOpenDoor::BeginPlay()
 
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 
+	InitialDoorRotation = GetOwner()->GetActorRotation();
+
+	Owner = GetOwner();
+}
+
+void UOpenDoor::OpenDoor()
+{
+	// Create a Rotator
+	FRotator NewRotation = FRotator(InitialDoorRotation.Pitch, InitialDoorRotation.Yaw + OpenAngle, InitialDoorRotation.Roll);
+
+	// Set the door rotation
+	if (Owner)
+	{
+		Owner->SetActorRotation(NewRotation);
+	}
+}
+
+void UOpenDoor::CloseDoor()
+{
+	// Set the door rotation
+	if (Owner)
+	{
+		Owner->SetActorRotation(InitialDoorRotation);
+	}
 }
 
 
@@ -44,12 +53,22 @@ void UOpenDoor::BeginPlay()
 void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
+	
 	// Poll the trigger volume
 	// if the ActorThatOpen
 	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
 	{
 		OpenDoor();
+
+		// time in seconds since world was brought up for play
+		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+		//GetWorld()->GetTimerManager().SetTimer(CloseDoorTimer, this, &UOpenDoor::CloseDoor, DoorClosedDelay, false);
+	}
+
+	// Check if it time to close the door
+	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorClosedDelay)
+	{
+		CloseDoor();
 	}
 }
 

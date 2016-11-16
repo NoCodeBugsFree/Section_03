@@ -26,9 +26,18 @@ protected:
 
 private:
 
+	UPROPERTY()
+	AActor* Owner;
+
+	FTimerHandle CloseDoorTimer;
+
+	FRotator InitialDoorRotation;
+
 	void OpenDoor();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	void CloseDoor();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float OpenAngle = 90.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
@@ -36,5 +45,10 @@ private:
 
 	UPROPERTY()
 	AActor* ActorThatOpens;
+	
+	float LastDoorOpenTime = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float DoorClosedDelay = 1.f;
 	
 };
