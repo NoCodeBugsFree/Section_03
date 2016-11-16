@@ -41,8 +41,17 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewPointLocation, OUT PlayerViewPointRotation);
 
-	// TODO log out to test
-	UE_LOG(LogTemp, Error, TEXT("Location = %s  Rotation = %s"), *PlayerViewPointLocation.ToString(), *PlayerViewPointRotation.ToString());
+	// log out to test
+	/*
+	UE_LOG(LogTemp, Error, TEXT("Location = %s  Rotation = %s"), 
+		*PlayerViewPointLocation.ToString(), 
+		*PlayerViewPointRotation.ToString());
+	*/
+
+	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
+
+	// Draw a red trace in the world to visualize
+	DrawDebugLine(GetWorld(), PlayerViewPointLocation, LineTraceEnd, FColor::Red, false, DeltaTime, 0, 20.f);
 
 	// Raycast out to reach distance
 
