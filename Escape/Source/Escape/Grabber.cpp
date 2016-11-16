@@ -34,6 +34,25 @@ void UGrabber::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Physics Handle Component NOT FOUND !!!"));
 	}
 	
+	// try to find InputComponent
+	// Implement an Actor component for input bindings
+	// An Input Component is a transient component that is to an Actor to bind various forms 
+	// of input events to delegate functions. Input components are processed from 
+	// a stack managed by the PlayerController and processed by the PlayerInput. 
+	// Each binding can consume the input event preventing other components 
+	// on the input stack from processing the input.
+	
+	InputComp = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("InputComp was found ..."));
+		// Bind the input axis
+		InputComp->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	} 
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("InputComp NOT FOUND !"));
+	}
 }
 
 
@@ -79,5 +98,10 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 		UE_LOG(LogTemp, Error, TEXT("%s"), *Hit.GetActor()->GetName());
 	}
 
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Error, TEXT("Grab()"));
 }
 

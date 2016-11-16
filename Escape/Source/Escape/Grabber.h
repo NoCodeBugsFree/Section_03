@@ -23,10 +23,15 @@ public:
 
 private:
 
+	/** Raycast and grab that's in reach  */
+	void Grab();
+
 	/** Reach in cm  */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float Reach = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandle;
+
+	UInputComponent* InputComp;
 	
 };
