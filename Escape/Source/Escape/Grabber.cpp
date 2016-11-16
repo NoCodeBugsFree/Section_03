@@ -34,7 +34,16 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	// if the physics handle is attached
+	if (PhysicsHandle->GrabbedComponent)
+	{
 		// move the object that we're holding
+		FVector PlayerViewPointLocation;
+		FRotator PlayerViewPointRotation;
+		GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewPointLocation, OUT PlayerViewPointRotation);
+
+		FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
 
 }
 
@@ -77,19 +86,34 @@ void UGrabber::SetupInputComponent()
 
 void UGrabber::GrabPressed()
 {
-	UE_LOG(LogTemp, Error, TEXT("GrabPressed()"));
-
 	// LINE TRACE and see if we reach any actors with physics body collision channel set
-	GetFirstPhysicsBodyInReach();
+	FHitResult HitResult = GetFirstPhysicsBodyInReach();
+
+ 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+
+	AActor* ActorHit = HitResult.GetActor();
 
 	// if we hit something then attach a physics handle
 	// TODO attach Physics Handle
+
+	if (ActorHit)
+	{
+		if (PhysicsHandle)
+		{
+			// UPhysicsHandleComponent::GrabComponent
+			// Grab the specified component
+			PhysicsHandle->GrabComponent(ComponentToGrab, NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), true); // allow rotation
+		}
+	}
 }
 
 void UGrabber::GrabReleased()
 {
-	UE_LOG(LogTemp, Error, TEXT("GrabReleased()"));
 	// Release Physics Handle
+	if (PhysicsHandle)
+	{
+		PhysicsHandle->ReleaseComponent();
+	}
 }
 
 const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
@@ -111,12 +135,6 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 	FHitResult Hit;
 	GetWorld()->LineTraceSingleByObjectType(OUT Hit, PlayerViewPointLocation, LineTraceEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), CQP);
-
-	// see what we hit
-	if (Hit.GetActor())
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s"), *Hit.GetActor()->GetName());
-	}
 
 	return Hit;
 }
