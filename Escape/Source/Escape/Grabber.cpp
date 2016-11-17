@@ -31,10 +31,13 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// if the physics handle is attached
-	if (PhysicsHandle->GrabbedComponent)
-	{	
-		PhysicsHandle->SetTargetLocation( GetReachLineEnd() );
+	if (PhysicsHandle)
+	{
+		// if the physics handle is attached
+		if (PhysicsHandle->GrabbedComponent)
+		{
+			PhysicsHandle->SetTargetLocation(GetReachLineEnd());
+		}
 	}
 }
 

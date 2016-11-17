@@ -22,6 +22,11 @@ void UOpenDoor::BeginPlay()
 	InitialDoorRotation = GetOwner()->GetActorRotation();
 
 	Owner = GetOwner();
+
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NOT PressurePlate ..."));
+	}
 }
 
 void UOpenDoor::OpenDoor()
