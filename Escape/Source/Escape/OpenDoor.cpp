@@ -48,7 +48,7 @@ void UOpenDoor::CloseDoor()
 float UOpenDoor::GetTotalMassOfActorsOnPlate() const
 {
 	float TotalMass = 0.f;
-
+	// defaultpawn -> physics -> constraints -> lock rotation x y z (set them to ticked)
 	TArray<AActor*> OverlappedActors;
 
 	// Find all the overlapping across
