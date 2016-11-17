@@ -3,6 +3,7 @@
 #include "Escape.h"
 #include "OpenDoor.h"
 
+#define OUT
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -11,16 +12,12 @@ UOpenDoor::UOpenDoor()
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 // Called when the game starts
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 
 	InitialDoorRotation = GetOwner()->GetActorRotation();
 
@@ -48,6 +45,30 @@ void UOpenDoor::CloseDoor()
 	}
 }
 
+float UOpenDoor::GetTotalMassOfActorsOnPlate() const
+{
+	float TotalMass = 0.f;
+
+	TArray<AActor*> OverlappedActors;
+
+	// Find all the overlapping across
+	if (PressurePlate)
+	{
+		// Returns list of actors this actor is overlapping 
+		// (any component overlapping any component). Does not return itself.
+		PressurePlate->GetOverlappingActors(OUT OverlappedActors);
+
+		// Iterate through them adding their mass
+		for (AActor* OverlappedActor : OverlappedActors)
+		{
+			//TotalMass += OverlappedActor
+		}
+	}
+
+	
+
+	return TotalMass;
+}
 
 // Called every frame
 void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
@@ -56,7 +77,7 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	
 	// Poll the trigger volume
 	// if the ActorThatOpen
-	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+	if (GetTotalMassOfActorsOnPlate() > 50.f) // TODO remove HC
 	{
 		OpenDoor();
 

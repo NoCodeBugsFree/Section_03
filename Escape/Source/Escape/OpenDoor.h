@@ -37,14 +37,13 @@ private:
 
 	void CloseDoor();
 
+	float GetTotalMassOfActorsOnPlate() const;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	float OpenAngle = 90.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	ATriggerVolume* PressurePlate;
-
-	UPROPERTY()
-	AActor* ActorThatOpens;
 	
 	float LastDoorOpenTime = 0.f;
 
