@@ -23,16 +23,22 @@ public:
 
 private:
 
-	/** Reach in cm  */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	float Reach = 100.f;
-	
 	UPhysicsHandleComponent* PhysicsHandle;
 
 	UInputComponent* InputComp;
 
+	/** Reach in cm  */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float Reach = 100.f;
+	
 	/**  find (assumed) attached  PhysicsHandleComponent */
 	void FindPhysicsHandleComponent();
+
+	/**  Return current end of reach line */
+	FVector GetReachLineEnd();
+
+	/**  Return current start of reach line */
+	FVector GetReachLineStart();
 
 	/**  setup (assumed attached InputComponent */
 	void SetupInputComponent();
