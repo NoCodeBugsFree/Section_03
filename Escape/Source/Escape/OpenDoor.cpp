@@ -31,23 +31,12 @@ void UOpenDoor::BeginPlay()
 
 void UOpenDoor::OpenDoor()
 {
-	// Create a Rotator
-	FRotator NewRotation = FRotator(InitialDoorRotation.Pitch, InitialDoorRotation.Yaw + OpenAngle, InitialDoorRotation.Roll);
-
-	// Set the door rotation
-	if (Owner)
-	{
-		Owner->SetActorRotation(NewRotation);
-	}
+	OnOpenRequest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
 {
-	// Set the door rotation
-	if (Owner)
-	{
-		Owner->SetActorRotation(InitialDoorRotation);
-	}
+	
 }
 
 float UOpenDoor::GetTotalMassOfActorsOnPlate() const
