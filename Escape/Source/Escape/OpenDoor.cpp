@@ -49,7 +49,7 @@ float UOpenDoor::GetTotalMassOfActorsOnPlate() const
 			UE_LOG(LogTemp, Error, TEXT("%s on pressure plate"), *Actor->GetName());
 		}
 	}
-	
+
 	return TotalMass;
 }
 

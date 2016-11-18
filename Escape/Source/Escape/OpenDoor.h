@@ -30,8 +30,7 @@ public:
 	FOnCloseRequest OnCloseRequest;
 	
 protected:
-
-
+	
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
@@ -40,6 +39,7 @@ private:
 	UPROPERTY()
 	AActor* Owner;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	FRotator InitialDoorRotation;
 
 	float GetTotalMassOfActorsOnPlate() const;
