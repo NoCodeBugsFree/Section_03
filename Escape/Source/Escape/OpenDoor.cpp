@@ -29,16 +29,6 @@ void UOpenDoor::BeginPlay()
 	}
 }
 
-void UOpenDoor::OpenDoor()
-{
-	OnOpenRequest.Broadcast();
-}
-
-void UOpenDoor::CloseDoor()
-{
-	
-}
-
 float UOpenDoor::GetTotalMassOfActorsOnPlate() const
 {
 	float TotalMass = 0.f;
@@ -70,19 +60,13 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	
 	// Poll the trigger volume
 	// if the ActorThatOpen
-	if (GetTotalMassOfActorsOnPlate() > 50.f) // TODO remove HC
+	if (GetTotalMassOfActorsOnPlate() > TriggerMass) 
 	{
-		OpenDoor();
-
-		// time in seconds since world was brought up for play
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-		//GetWorld()->GetTimerManager().SetTimer(CloseDoorTimer, this, &UOpenDoor::CloseDoor, DoorClosedDelay, false);
+		OnOpenRequest.Broadcast();
 	}
-
-	// Check if it time to close the door
-	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorClosedDelay)
+	else
 	{
-		CloseDoor();
+		OnCloseRequest.Broadcast();
 	}
 }
 

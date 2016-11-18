@@ -6,6 +6,7 @@
 #include "OpenDoor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenRequest); // FOnOpenRequest - Random Class Name
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseRequest); // FOnOpenRequest - Random Class Name
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ESCAPE_API UOpenDoor : public UActorComponent
@@ -25,21 +26,21 @@ public:
 	UPROPERTY(BlueprintAssignable) 
 	FOnOpenRequest OnOpenRequest;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnCloseRequest OnCloseRequest;
+	
 protected:
 
 
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float TriggerMass = 50.f;
+
 	UPROPERTY()
 	AActor* Owner;
 
-	FTimerHandle CloseDoorTimer;
-
 	FRotator InitialDoorRotation;
-
-	void OpenDoor();
-
-	void CloseDoor();
 
 	float GetTotalMassOfActorsOnPlate() const;
 
@@ -48,10 +49,5 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	ATriggerVolume* PressurePlate;
-	
-	float LastDoorOpenTime = 0.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
-	float DoorClosedDelay = 1.f;
 	
 };
